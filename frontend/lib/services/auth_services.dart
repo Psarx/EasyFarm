@@ -3,15 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ward_connect/models/complaints.dart' as ComplaintModel;
-import 'package:ward_connect/models/user.dart';
-import 'package:ward_connect/models/cot.dart';
 import 'package:ward_connect/providers/user_provider.dart';
-import 'package:ward_connect/screens/member/home_screen.dart';
-import 'package:ward_connect/screens/user/complaint.dart';
 import 'package:ward_connect/screens/user/home_screen.dart';
 import 'package:ward_connect/screens/user/signup_screen.dart';
-import 'package:ward_connect/screens/user/certificate_testi.dart';
 import 'package:ward_connect/utils/constants.dart';
 import 'package:ward_connect/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +13,7 @@ import 'package:provider/provider.dart';
 class AuthService {
   void signUpUser({
     required BuildContext context,
-    required String username,
+    required String email,
     required String password,
     required String name,
   }) async {
@@ -27,13 +21,13 @@ class AuthService {
       // Create a User object with the provided data
       Map<String, dynamic> userData = {
         'name': name,
-        'username': username,
+        'email': email,
         'password': password,
       };
 
       // Send a POST request to the signup endpoint
       http.Response res = await http.post(
-        Uri.parse('${Constants.uri}/api/auth/signup'),
+        Uri.parse('${Constants.uri}/api/signup'),
         body: jsonEncode(userData),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -62,7 +56,7 @@ class AuthService {
 
   void signInUser({
     required BuildContext context,
-    required String username,
+    required String email,
     required String password,
   }) async {
     try {
@@ -71,7 +65,7 @@ class AuthService {
       http.Response res = await http.post(
         Uri.parse('${Constants.uri}/api/signin'),
         body: jsonEncode({
-          'username': username,
+          'email': email,
           'password': password,
         }),
         headers: <String, String>{
@@ -86,24 +80,13 @@ class AuthService {
         await prefs.setString('user', jsonDecode(res.body)['_id']);
         print('Token stored: ${jsonDecode(res.body)['token']}');
 
-        // Check the username and redirect accordingly
-        if (username.startsWith('USER')) {
-          navigator.pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(),
-            ),
-            (route) => false,
-          );
-        } else if (username.startsWith('WUSER')) {
-          navigator.pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => MemberScreen(),
-            ),
-            (route) => false,
-          );
-        } else {
-          // Handle other cases if necessary
-        }
+        // Navigate to the home screen
+        navigator.pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+          (route) => false,
+        );
       } else if (res.statusCode == 400) {
         // Display error message from backend
         String errorMessage = jsonDecode(res.body)['message'];
@@ -152,97 +135,6 @@ class AuthService {
       }
     } catch (e) {
       showSnackBar(context, e.toString());
-    }
-  }
-
-  void signOut(BuildContext context) async {
-    final navigator = Navigator.of(context);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('x-auth-token', '');
-    navigator.pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => SignupScreen(),
-      ),
-      (route) => false,
-    );
-  }
-
-  void applyForCertificate({
-    required BuildContext context,
-    required String appliname,
-    required String phone,
-    required String details,
-  }) async {
-    try {
-      CertificateofTestimony cot = CertificateofTestimony(
-        appliname: appliname,
-        phone: phone,
-        details: details,
-      );
-
-      http.Response res = await http.post(
-        Uri.parse('${Constants.uri}/api/certificate'),
-        body: cot.toJson(),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackBar(
-            context,
-            'Request Submitted',
-          );
-        },
-      );
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-  }
-
-  void registerComplaint({
-    required BuildContext context,
-    required String name,
-    required String phone,
-    required String complaintText,
-    required Function(String) onSuccess, // Callback to handle success message
-  }) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String usId = prefs.getString('user') ??
-          ''; // Retrieve usId from shared preferences
-
-      ComplaintModel.Complaints complaint = ComplaintModel.Complaints(
-        name: name,
-        phone: phone,
-        complaint: complaintText,
-      );
-
-      http.Response res = await http.post(
-        Uri.parse('${Constants.uri}/api/complaint'),
-        body: complaint.toJson(),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'usId': usId,
-        },
-      );
-
-      print('Response status code: ${res.statusCode}');
-      print('Response body: ${res.body}');
-
-      if (res.statusCode == 201) {
-        Map<String, dynamic> data = json.decode(res.body);
-        String serverMessage = data['message'];
-        onSuccess(
-            serverMessage); // Call the onSuccess callback with the server message
-      } else {
-        showSnackBar(context, 'Error: ${res.statusCode}');
-      }
-    } catch (e) {
-      showSnackBar(context, 'Error: $e');
     }
   }
 

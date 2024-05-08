@@ -5,7 +5,7 @@ class UserProvider extends ChangeNotifier {
   User _user = User(
     id: '',
     name: '',
-    username: '',
+    email: '',
     token: '',
     password: '',
   );
