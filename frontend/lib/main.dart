@@ -36,12 +36,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Node Auth',
+      title: 'EasyFarm',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: Provider.of<UserProvider>(context).user.token.isEmpty
-          ? SignupScreen()
+          ? LoginScreen()
           : HomeScreen(),
     );
   }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ward_connect/screens/user/login_screen.dart'; // Import your login screen here
+import 'package:ward_connect/screens/user/login_screen.dart';
+import 'package:ward_connect/screens/user/disease_screen.dart';
+import 'package:ward_connect/screens/user/plant_screen.dart';
+import 'package:ward_connect/screens/user/weather_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   void logout(BuildContext context) {
@@ -16,22 +19,21 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Make app bar transparent
-        elevation: 0, // Remove shadow
-        title: Text('Home'),
+        backgroundColor: Colors.transparent,
+        elevation: 0, // Remove elevation
         actions: [
           IconButton(
+            onPressed: () =>
+                logout(context), // Pass reference to logout function
             icon: Icon(Icons.logout),
-            onPressed: () => logout(context),
           ),
         ],
       ),
       body: Container(
-        width: double.infinity,
-        height: double.infinity, // Set height to occupy full screen
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('/bggreen.jpg'), // Change background image here
+            image: AssetImage(
+                'assets/images/bg2.jpg'), // Change image path as needed
             fit: BoxFit.cover,
           ),
         ),
@@ -39,13 +41,156 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Welcome to the Home Screen!',
-              style: TextStyle(fontSize: 20, color: Colors.white),
-              textAlign: TextAlign.center,
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigate to page when first icon is clicked
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DiseaseScreen()));
+                      },
+                      child: Image.asset(
+                        'assets/images/crop_disease.png',
+                        width: 190,
+                        height: 190,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Crop Disease',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 20),
+                Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigate to page when second icon is clicked
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlantScreen()));
+                      },
+                      child: Image.asset(
+                        'assets/images/cropview.png',
+                        width: 190,
+                        height: 190,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Plant Details',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigate to page when third icon is clicked
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ThirdPage()));
+                      },
+                      child: Image.asset(
+                        'assets/images/crpdisease.png',
+                        width: 190,
+                        height: 190,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Crop Disease',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 20),
+                Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        // Navigate to page when fourth icon is clicked
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WeatherScreen()));
+                      },
+                      child: Image.asset(
+                        'assets/images/weather_forecast.png',
+                        width: 190,
+                        height: 190,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Weather Forecast',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Page'),
+      ),
+      body: Center(
+        child: Text('This is the Second Page'),
+      ),
+    );
+  }
+}
+
+class ThirdPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Third Page'),
+      ),
+      body: Center(
+        child: Text('This is the Third Page'),
+      ),
+    );
+  }
+}
+
+class FourthPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Fourth Page'),
+      ),
+      body: Center(
+        child: Text('This is the Fourth Page'),
       ),
     );
   }
