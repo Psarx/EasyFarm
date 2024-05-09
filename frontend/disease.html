@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detection</title>
+    <style>
+        /* Styles for the title */
+        .title {
+            color: #4CAF50; /* Green */
+            text-align: center;
+            font-size: 24px;
+        }
+
+        /* Styles for the classify button */
+        .classify-button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .classify-button:hover {
+            background-color: #45a049; /* Darker Green */
+        }
+
+        /* Styles for the result paragraph */
+        .result {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.5s ease;
+        }
+
+        .result.show {
+            opacity: 1; /* Show result with animation */
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">Plant Disease Detection</h1>
+    <input type="file" id="fileInput" accept=".jpg, .jpeg, .png">
+    <button onclick="classifyImage()" class="classify-button">Classify Image</button>
+    <p id="result" class="result"></p>
+    <p id="predictedLabel" class="result"></p>
+
+    <script>
+        async function classifyImage() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('http://localhost:5000/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                const label = data.predicted_label;
+                const probabilities = data.probabilities;
+                
+                // Display predicted label
+                document.getElementById('predictedLabel').innerHTML = `<b>Predicted Label:</b> ${label}<br><br>`;
+                
+                // Display probabilities
+                document.getElementById('result').innerHTML = '';
+                probabilities.forEach((prob, index) => {
+                    const probabilityText = (prob * 100).toFixed(2); // Convert probability to percentage
+                    const diseaseLabel = data.id2label[index.toString()]; // Get disease label from index
+                    document.getElementById('result').innerHTML += `<b>${diseaseLabel}:</b> ${probabilityText}%<br>`;
+                });
+
+                // Add animation to result paragraph
+                document.getElementById('predictedLabel').classList.add('show');
+                document.getElementById('result').classList.add('show');
+            } catch (error) {
+                console.log('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

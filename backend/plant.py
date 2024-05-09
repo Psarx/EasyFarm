@@ -5,8 +5,10 @@ from PIL import Image
 import torch
 import os
 import json
+from flask_cors import CORS  # Import CORS from flask_cors
 
 app = Flask(__name__)
+CORS(app)  # Add this line to enable CORS for your Flask app
 
 # Define upload folder
 assets_dir = 'frontend/assets/folder'

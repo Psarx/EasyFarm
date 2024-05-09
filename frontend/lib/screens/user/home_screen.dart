@@ -4,12 +4,10 @@ import 'package:ward_connect/screens/user/login_screen.dart';
 import 'package:ward_connect/screens/user/disease_screen.dart';
 import 'package:ward_connect/screens/user/plant_screen.dart';
 import 'package:ward_connect/screens/user/weather_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   void logout(BuildContext context) {
-    // Implement logout functionality here
-    // For example, you can clear user session, remove tokens, etc.
-    // After logout, navigate to the sign-in page
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -21,11 +19,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        elevation: 0, // Remove elevation
+        elevation: 0,
         actions: [
           IconButton(
-            onPressed: () =>
-                logout(context), // Pass reference to logout function
+            onPressed: () => logout(context),
             icon: Icon(Icons.logout),
           ),
         ],
@@ -33,8 +30,7 @@ class HomeScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
-                'assets/images/bg2.jpg'), // Change image path as needed
+            image: AssetImage('assets/images/bg2.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -49,12 +45,14 @@ class HomeScreen extends StatelessWidget {
                 Column(
                   children: [
                     InkWell(
-                      onTap: () {
-                        // Navigate to page when first icon is clicked
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PlantDiseaseScreen()));
+                      onTap: () async {
+                        const url =
+                            'file:///C:/Users/HP/OneDrive/Desktop/bmc/frontend/disease.html';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
                       },
                       child: Image.asset(
                         'assets/images/crop_disease.png',
@@ -74,7 +72,6 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Navigate to page when second icon is clicked
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -103,7 +100,6 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Navigate to page when third icon is clicked
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -127,7 +123,6 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        // Navigate to page when fourth icon is clicked
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -150,34 +145,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class SecondPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Second Page'),
-      ),
-      body: Center(
-        child: Text('This is the Second Page'),
-      ),
-    );
-  }
-}
-
-class ThirdPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Third Page'),
-      ),
-      body: Center(
-        child: Text('This is the Third Page'),
       ),
     );
   }
