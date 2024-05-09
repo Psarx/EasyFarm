@@ -1,0 +1,5 @@
+2024/05/09-10:59:28.457 f70 Creating DB C:\Users\HP\AppData\Local\Temp\flutter_tools.746bacc6\flutter_tools_chrome_device.1df20ab1\Default\IndexedDB\https_www.canva.com_0.indexeddb.leveldb since it was missing.
+2024/05/09-10:59:28.478 f70 Reusing MANIFEST C:\Users\HP\AppData\Local\Temp\flutter_tools.746bacc6\flutter_tools_chrome_device.1df20ab1\Default\IndexedDB\https_www.canva.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/05/09-11:13:32.224 3210 Level-0 table #5: started
+2024/05/09-11:13:32.308 3210 Level-0 table #5: 1638707 bytes OK
+2024/05/09-11:13:32.316 3210 Delete type=0 #3
