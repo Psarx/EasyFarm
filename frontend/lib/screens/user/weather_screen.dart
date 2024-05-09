@@ -28,9 +28,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Future<void> getWeatherData(String location) async {
-    final Uri uri =
-        Uri.parse('YOUR_BACKEND_API_URL'); // Replace with your backend API URL
-    final response = await http.get(uri);
+    final Uri uri = Uri.parse('http://localhost:8080/api/weather');
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'location': location,
+      },
+    );
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
@@ -55,54 +60,90 @@ class _WeatherScreenState extends State<WeatherScreen> {
         title: Text('Weather Data'),
       ),
       body: Column(
+        mainAxisSize: MainAxisSize.min, // Shrink-wrap vertically
         children: [
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: TextField(
-              controller: locationController,
-              decoration: InputDecoration(
-                labelText: 'Enter Location',
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/bg2.jpg'),
+                  fit: BoxFit.fill, // Adjusted BoxFit to fill the entire width
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: TextField(
+                        controller: locationController,
+                        decoration: InputDecoration(
+                          labelText: 'Enter Location',
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final String location = locationController.text;
+                        await getWeatherData(location);
+                      },
+                      child: Text('Get Weather'),
+                    ),
+                    SizedBox(height: 20),
+                    _buildWeatherTextField(
+                      controller: weatherController,
+                      labelText: 'Weather',
+                    ),
+                    _buildWeatherTextField(
+                      controller: temperatureController,
+                      labelText: 'Temperature',
+                    ),
+                    _buildWeatherTextField(
+                      controller: humidityController,
+                      labelText: 'Humidity',
+                    ),
+                    _buildWeatherTextField(
+                      controller: windSpeedController,
+                      labelText: 'Wind Speed',
+                    ),
+                    _buildWeatherTextField(
+                      controller: timestampController,
+                      labelText: 'Timestamp',
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              final String location = locationController.text;
-              await getWeatherData(location);
-            },
-            child: Text('Get Weather'),
-          ),
-          TextFormField(
-            controller: weatherController,
-            decoration: InputDecoration(
-              labelText: 'Weather',
-            ),
-          ),
-          TextFormField(
-            controller: temperatureController,
-            decoration: InputDecoration(
-              labelText: 'Temperature',
-            ),
-          ),
-          TextFormField(
-            controller: humidityController,
-            decoration: InputDecoration(
-              labelText: 'Humidity',
-            ),
-          ),
-          TextFormField(
-            controller: windSpeedController,
-            decoration: InputDecoration(
-              labelText: 'Wind Speed',
-            ),
-          ),
-          TextFormField(
-            controller: timestampController,
-            decoration: InputDecoration(
-              labelText: 'Timestamp',
-            ),
-          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildWeatherTextField({
+    required TextEditingController controller,
+    required String labelText,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        style: TextStyle(
+          fontSize: 18.0,
+          color: Colors.black,
+        ),
+        readOnly: true,
       ),
     );
   }

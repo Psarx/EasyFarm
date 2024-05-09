@@ -62,17 +62,26 @@ authRouter.post("/api/signup", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-authRouter.get("/api/weather", auth, async (req, res) => {
+authRouter.get("/api/weather", async (req, res) => {
   try {
-    // Fetch weather data from your backend API or external service
-    const response = await fetch('YOUR_WEATHER_API_URL');
-    const weatherData = await response.json();
+    // Extract the location from the request headers
+    const location = req.headers.location;
+
+    // Find the weather data for the specified location in the database
+    const weatherData = await WeatherData.findOne({ location });
+
+    // Check if weather data for the location is found
+    if (!weatherData) {
+      return res.status(404).json({ message: "Weather data not found for the specified location" });
+    }
 
     res.json(weatherData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+
 authRouter.post("/api/signin", async (req, res) => {
   try {
     const { email, password } = req.body;

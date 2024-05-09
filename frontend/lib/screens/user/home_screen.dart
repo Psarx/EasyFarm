@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ward_connect/screens/user/soil_screen.dart';
 import 'package:ward_connect/screens/user/login_screen.dart';
 import 'package:ward_connect/screens/user/disease_screen.dart';
 import 'package:ward_connect/screens/user/plant_screen.dart';
 import 'package:ward_connect/screens/user/weather_screen.dart';
+import 'package:ward_connect/screens/user/soil_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   void logout(BuildContext context) {
@@ -106,7 +108,7 @@ class HomeScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ThirdPage()));
+                                builder: (context) => SoilTypesScreen()));
                       },
                       child: Image.asset(
                         'assets/images/crpdisease.png',
@@ -116,7 +118,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      'Crop Disease',
+                      'Soil Types',
                       style: TextStyle(fontSize: 18),
                     ),
                   ],
@@ -177,20 +179,6 @@ class ThirdPage extends StatelessWidget {
       ),
       body: Center(
         child: Text('This is the Third Page'),
-      ),
-    );
-  }
-}
-
-class FourthPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Fourth Page'),
-      ),
-      body: Center(
-        child: Text('This is the Fourth Page'),
       ),
     );
   }
