@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ward_connect/screens/user/soil_screen.dart';
 import 'package:ward_connect/screens/user/login_screen.dart';
-import 'package:ward_connect/screens/user/disease.dart';
+import 'package:ward_connect/screens/user/disease_screen.dart';
 import 'package:ward_connect/screens/user/plant_screen.dart';
 import 'package:ward_connect/screens/user/weather_screen.dart';
 
@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TfliteModel()));
+                                builder: (context) => PlantDiseaseDetector()));
                       },
                       child: Image.asset(
                         'assets/images/crop_disease.png',
