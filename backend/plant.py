@@ -8,6 +8,11 @@ import os
 
 app = Flask(__name__)
 
+# Define upload folder
+assets_dir = '/path/to/your/assets/folder'
+# Check if the assets directory exists, create it if it doesn't
+if not os.path.exists(assets_dir):
+    os.makedirs(assets_dir)
 # Load model and processor
 processor = AutoImageProcessor.from_pretrained("linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification")
 model = AutoModelForImageClassification.from_pretrained("linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification")
@@ -28,16 +33,12 @@ def run_inference(inputs):
 # Route to classify image
 @app.route('/classify', methods=['POST'])
 def classify_image():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
-    
+    # Get the file from the request
     file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'})
-    
-    # Save uploaded file
-    filename = secure_filename(file.filename)
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    filename = file.filename
+
+    # Save the file to the assets directory
+    filepath = os.path.join(assets_dir, filename)
     file.save(filepath)
     
     # Preprocess image

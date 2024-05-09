@@ -54,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PlantDiseaseDetector()));
+                                builder: (context) => PlantDiseaseScreen()));
                       },
                       child: Image.asset(
                         'assets/images/crop_disease.png',

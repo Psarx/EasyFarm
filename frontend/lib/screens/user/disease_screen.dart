@@ -1,64 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:tflite/tflite.dart';
-import 'dart:async';
+import 'package:http/http.dart' as http;
 
-class PlantDiseaseDetector extends StatefulWidget {
-  @override
-  _PlantDiseaseDetectorState createState() => _PlantDiseaseDetectorState();
-}
-
-class _PlantDiseaseDetectorState extends State<PlantDiseaseDetector> {
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    loadModel();
-  }
-
-  Future<void> loadModel() async {
-    await Tflite.loadModel(
-      model: 'assets/model.tflite',
-      labels: '',
+class PlantDiseaseScreen extends StatelessWidget {
+  Future<void> classifyImage() async {
+    final response = await http.post(
+      Uri.parse('http://localhost:5000/classify'),
+      body: {'filename': 'leaf.jpg'}, // Change the filename as needed
     );
-    setState(() {
-      _loading = false;
-    });
-  }
 
-  Future<void> detectObjects(String imagePath) async {
-    var output = await Tflite.detectObjectOnImage(
-      path: imagePath,
-      numResultsPerClass: 1,
-      threshold: 0.1,
-    );
-    print(output);
+    if (response.statusCode == 200) {
+      print('Image classified successfully');
+    } else {
+      print('Failed to classify image');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Plant Disease Detector'),
+        title: Text('Plant Disease Classification'),
       ),
       body: Center(
-        child: _loading
-            ? CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: () {
-                  // Call a function to detect objects in the image
-                  detectObjects(
-                      'assets/leaf.jpg'); // Path to your image in assets
-                },
-                child: Text('Detect Objects'),
-              ),
+        child: ElevatedButton(
+          onPressed: classifyImage,
+          child: Text('Classify Image'),
+        ),
       ),
     );
   }
+}
 
-  @override
-  void dispose() {
-    Tflite.close();
-    super.dispose();
-  }
+void main() {
+  runApp(MaterialApp(
+    title: 'Plant Disease Detection',
+    home: PlantDiseaseScreen(),
+  ));
 }
